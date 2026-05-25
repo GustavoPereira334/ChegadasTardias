@@ -1,0 +1,80 @@
+body {
+    background-color: #F2E6DF;
+    background-image: url(src/utils/images/fundo.png);
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logon {
+    background-color: #F2BBA7;
+    border-radius: 16px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 48%;
+}
+
+.logon h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.logon label {
+    font-size: 13px;
+    color: #555;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.logon input[type="text"],
+.logon input[type="password"] {
+    border: none;
+    outline: none;  
+    border-radius: 7px;
+    background-color: #ffffff;
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.logon a {
+    font-size: 12px;
+    color: #555;
+    text-decoration: none;
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+}
+
+.logon input[type="submit"] {
+    width: 100%;
+    height: 42px;
+    background-color: #E8501A;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.logon input[type="submit"]:hover {
+    background-color: #c94415;
+}
+
+
+#name, #Senha{
+    height: 20px;
+    width: 250px;
+    text-decoration: none;
+    border: none;
+    outline: none ;
+    border-radius: 7px;
+}
+

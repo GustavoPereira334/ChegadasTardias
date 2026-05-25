@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela Login</title>
+    <link rel="stylesheet" href="src/style/index.css">
 </head>
+
 <body>
-    
+    <div class="container">
+        <div class="logon">
+            <h1>Login</h1>
+
+            <form action="flogin">
+                <label for="Name">Usuário</label>
+                <input type="text" name="Tname" id="name" required>
+                <br>
+                <label for="Senha">Senha</label>
+                <input type="password" name="Psenha" id="Senha" required>
+                <p><a href="#">Esqueceu a Senha?</a></p>
+
+                <input type="submit" name="entrar" id="Entrar">
+
+                <div class="img"><img src="src/utils/images/image senai.png" alt="imagem senai" width="30px" height="30px"></div>
+            </form>
+        </div>
+        <div class="image">
+            <img src="src/utils/images/unnamed.png" alt="Imagem Senai">
+        </div>
+    </div>
 </body>
+
 </html>

@@ -1,11 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registro de Atraso</title>
 </head>
+
 <body>
-    
+    <header>
+        <div class="imageHeader"><img src="#" alt="Imagem Principal"></div>
+        <h1>Registro de Atraso</h1>
+        <h3>Preencha as informações abaixo para registrar o atraso.</h3>
+    </header>
+    <main>
+        <div class="estudanteTurma">
+            <label for="Estudante">Estudante <span>*</span></label>
+            <input type="text" name="estudante" id="iEstudante" required placeholder="Digite o nome do estudante">
+
+            <label for="Turma">Turma <span>*</span></label>
+            <select name="turma" id="turmas">
+                <option value="">Selecione a turma</option>
+                <option value="TI">AATI M1</option>
+                <option value="PCP">AAPCP V3</option>
+                <option value="WEG">AAWEG V1</option>
+                <option value="MANUTENCAO">AAMNT</option>
+            </select>
+
+            <div class="professor">
+                <label for="Professor">Professor <span>*</span></label>
+                <select name="Professor" id="Professores">
+                    <option value="">Selecione o Professor</option>
+                    <option value="TI">Willy Manke</option>
+                    <option value="PCP">Celina</option>
+                    <option value="WEG">Gustavo</option>
+                    <option value="MANUTENCAO">Alex</option>
+                </select>
+            </div>
+        </div>
+        <div class="atraso">
+            <label for="MtvAtraso">Motivo do Atraso <span>*</span></label>
+            <input type="radio" name="escola" id="escolares">
+            <p>Questões Escolares</p>
+            <input type="radio" name="hora" id="Phora">
+            <p>Perdeu a Hora</p>
+            <input type="radio" name="Atraso" id="Aonibus">
+            <p>Atraso Ônibus</p>
+            <input type="radio" name="saude" id="saude">
+            <p>Saúde/Bem-Estar</p>
+        </div>
+        <div class="descrevaAtraso">
+            <label for="Descreva">Descreva aqui... <span>(opcional)</span> </label>
+            <input type="text" name="descreva" id="descreva" placeholder="Descreva aqui...">
+
+            <input type="submit" value="Salvar registro">
+        </div>
+    </main>
 </body>
+
 </html>

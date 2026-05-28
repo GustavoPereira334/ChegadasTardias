@@ -1,80 +1,165 @@
-body {
-    background-color: #F2E6DF;
-    background-image: url(src/utils/images/fundo.png);
+/* ==========================================
+   1. RESET E CONFIGURAÇÕES GERAIS
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
+body {
+    height: 100vh;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+/* Container principal dividido ao meio */
 .container {
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    height: 100vh;
 }
 
+/* ==========================================
+   2. LADO ESQUERDO: FORMULÁRIO DE LOGON
+   ========================================== */
 .logon {
-    background-color: #F2BBA7;
-    border-radius: 16px;
-    padding: 32px 28px;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    width: 48%;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background-color: #ffffff;
 }
 
+/* Envoltório do formulário para controlar a largura máxima */
+.logon form {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título estilizado */
 .logon h1 {
-    font-size: 28px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
+    font-size: 1.8rem;
+    color: #333333;
+    margin-bottom: 25px;
+    font-weight: 700;
+    width: 100%;
+    max-width: 360px;
+    text-align: left;
 }
 
+/* Rótulos dos campos */
 .logon label {
-    font-size: 13px;
-    color: #555;
-    display: block;
+    font-size: 0.85rem;
+    color: #666666;
     margin-bottom: 6px;
+    font-weight: 500;
 }
 
+/* Campos de entrada (Usuário e Senha) */
 .logon input[type="text"],
 .logon input[type="password"] {
-    border: none;
-    outline: none;  
-    border-radius: 7px;
-    background-color: #ffffff;
-    font-size: 14px;
-    padding: 0 10px;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    font-size: 0.95rem;
+    color: #333333;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.logon a {
-    font-size: 12px;
-    color: #555;
-    text-decoration: none;
-    display: block;
-    text-align: right;
+/* Efeito ao clicar no input */
+.logon input[type="text"]:focus,
+.logon input[type="password"]:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
+}
+
+/* Link de esquecer a senha */
+.logon p {
     margin-top: 4px;
+    margin-bottom: 20px;
 }
 
+.logon p a {
+    font-size: 0.8rem;
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.logon p a:hover {
+    text-decoration: underline;
+}
+
+/* Botão de Enviar (Entrar) */
 .logon input[type="submit"] {
     width: 100%;
-    height: 42px;
-    background-color: #E8501A;
+    padding: 12px;
+    background-color: #0056b3;
     color: #ffffff;
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 4px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
+    transition: background-color 0.2s;
+    margin-bottom: 30px;
 }
 
 .logon input[type="submit"]:hover {
-    background-color: #c94415;
+    background-color: #004085;
+}
+
+/* Centralização do logo pequeno do Senai abaixo do formulário */
+.logon .img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Remove a quebra <br> padrão para não quebrar o layout flexbox */
+.logon br {
+    display: none;
 }
 
 
-#name, #Senha{
-    height: 20px;
-    width: 250px;
-    text-decoration: none;
-    border: none;
-    outline: none ;
-    border-radius: 7px;
+.image {
+    flex: 1;
+    background-color: orangered; /* Cor sólida caso a imagem falhe */
+    position: relative;
+    overflow: hidden;
+    background-size: cover
 }
 
+/* Garante que a imagem ocupe todo o espaço lateral com corte perfeito */
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .image {
+        display: none; /* Oculta o lado azul em telas pequenas focando no login */
+    }
+    
+    .logon {
+        padding: 20px;
+    }
+}

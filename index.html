@@ -13,8 +13,7 @@
         <div class="logon">
             <h1>Login</h1>
 
-            <!-- APENAS UM FORMULÁRIO: Configurado com o destino e o método GET -->
-            <form action="src/pages/chegadastardias.html" method="GET">
+            <form id="loginForm">
                 <label for="name">Usuário</label>
                 <input type="text" name="Tname" id="name" required>
                 <br>
@@ -22,7 +21,7 @@
                 <input type="password" name="Psenha" id="Senha" required>
                 <p><a href="#">Esqueceu a Senha?</a></p>
 
-                <!-- O botão agora pertence legitimamente ao formulário acima -->
+                <!-- O botão agora apenas dispara o evento de submit -->
                 <input type="submit" name="entrar" id="Entrar" value="Entrar">
 
                 <div class="img">

@@ -11,7 +11,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
     // 4. Validação 
     if (usuarioDigitado === usuarioCorreto && senhaDigitada === senhaCorreta) {
-        window.location.href = "./src/pages/chegadastardias.html";
+        window.location.href = "./src/pages/administrator.html";
     } else {
         // Mensagem de erro
         alert("Usuário ou senha incorretos! Tente novamente.");

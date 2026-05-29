@@ -1,0 +1,175 @@
+/* Configurações Gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f9fa;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 900px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Cabeçalho e Filtros */
+.container h3 {
+    font-size: 1.3rem;
+    color: #1a202c;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.filters-container {
+    float: right;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filters-container input,
+.filters-container select {
+    padding: 8px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    color: #64748b;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.filters-container input:focus,
+.filters-container select:focus {
+    border-color: #94a3b8;
+}
+
+/* Container de Cards */
+.cards-container {
+    clear: both;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 35px;
+}
+
+.card {
+    flex: 1;
+    background-color: #F2F2EB;
+    border: 1px solid #F2F2EB;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.card-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.card-label {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* Tabela de Informações */
+.table-info {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table-info th {
+    text-align: left;
+    font-size: 0.75rem;
+    color: #a0aec0;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.table-info td {
+    padding: 16px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.9rem;
+    color: #2d3748;
+    vertical-align: middle;
+}
+
+/* Elementos Internos da Tabela (Badges e Avatares) */
+.avatar {
+    background-color: #e2e8f0;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.badge-turma {
+    background-color: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.badge-turma-alt {
+    background-color: #fff7ed;
+    color: #ea580c;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* Cores dos Motivos */
+.motivo {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.motivo-perdeu {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.motivo-saude {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.motivo-onibus {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+/* Botão de Excluir */
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a0aec0;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.btn-delete:hover {
+    color: #e53e3e;
+}

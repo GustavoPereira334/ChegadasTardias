@@ -1,0 +1,284 @@
+/* Configurações Gerais e Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #fcfcfc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+main {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 750px;
+    padding: 40px;
+    border-radius: 12px;
+}
+
+/* Cabeçalho */
+header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+header .imageHeader {
+    background-color: #ffe6dc;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    color: #000000;
+    font-weight: 700;
+}
+
+header h3 {
+    font-size: 0.9rem;
+    color: #666666;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+/* Formulário e Estrutura de Grade */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* Labels e Campos de Entrada */
+label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+label span {
+    color: #e53e3e;
+    margin-left: 2px;
+}
+
+label .opcional {
+    color: #a0aec0;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+/* Customização dos Inputs, Selects e Textarea */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i,
+.input-wrapper svg {
+    position: absolute;
+    left: 15px;
+    color: #a0aec0;
+    pointer-events: none;
+}
+
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    /* Espaço para o ícone na esquerda */
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333333;
+    background-color: #ffffff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+    padding-right: 40px;
+}
+
+input::placeholder,
+select:invalid {
+    color: #a0aec0;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #f3a382;
+}
+
+/* Seção de Motivos (Cards de Rádio) */
+.motivos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.radio-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.radio-card:hover {
+    background-color: #f8fafc;
+}
+
+.radio-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.radio-content i,
+.radio-content svg {
+    font-size: 1.2rem;
+}
+
+/* Customização do botão redondo de rádio */
+input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #cbd5e1;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+}
+
+input[type="radio"]::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    background-color: #f3a382;
+    /* Cor interna quando selecionado */
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="radio"]:checked {
+    border-color: #f3a382;
+}
+
+/* Área de Texto (Descrição) */
+textarea {
+    height: 140px;
+    resize: none;
+    padding-top: 15px;
+}
+
+.textarea-container {
+    position: relative;
+}
+
+.char-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 0.8rem;
+    color: #a0aec0;
+}
+
+#Entrar {
+    background-color: #F29580;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%; /* Faz o botão ocupar toda a largura disponível */
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+/* Efeito visual ao passar o mouse por cima */
+#Entrar:hover {
+    background-color: #d87e6a; /* Tom mais escuro para o efeito hover */
+}
+
+button[type="submit"] {
+    background-color: #f3a382;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 0;
+    width: 100%;
+    max-width: 400px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #e28f6d;
+}
+
+/* Responsividade para Telas Menores (Celular) */
+@media (max-width: 600px) {
+
+    .grid-container,
+    .motivos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+
+    main {
+        padding: 20px;
+    }
+}

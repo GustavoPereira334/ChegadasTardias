@@ -1,61 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Atraso</title>
+    <link rel="stylesheet" href="../style/chegadastardias.css">
 </head>
 
 <body>
-    <header>
-        <div class="imageHeader"><img src="#" alt="Imagem Principal"></div>
-        <h1>Registro de Atraso</h1>
-        <h3>Preencha as informações abaixo para registrar o atraso.</h3>
-    </header>
     <main>
-        <div class="estudanteTurma">
-            <label for="Estudante">Estudante <span>*</span></label>
-            <input type="text" name="estudante" id="iEstudante" required placeholder="Digite o nome do estudante">
-
-            <label for="Turma">Turma <span>*</span></label>
-            <select name="turma" id="turmas">
-                <option value="">Selecione a turma</option>
-                <option value="TI">AATI M1</option>
-                <option value="PCP">AAPCP V3</option>
-                <option value="WEG">AAWEG V1</option>
-                <option value="MANUTENCAO">AAMNT</option>
-            </select>
-
-            <div class="professor">
-                <label for="Professor">Professor <span>*</span></label>
-                <select name="Professor" id="Professores">
-                    <option value="">Selecione o Professor</option>
-                    <option value="TI">Willy Manke</option>
-                    <option value="PCP">Celina</option>
-                    <option value="WEG">Gustavo</option>
-                    <option value="MANUTENCAO">Alex</option>
-                </select>
+        <header>
+            <div class="imageHeader">
+                <!-- Ícone do Cabeçalho (Relógio Salmão) -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F29580" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
-        </div>
-        <div class="atraso">
-            <label for="MtvAtraso">Motivo do Atraso <span>*</span></label>
-            <input type="radio" name="escola" id="escolares">
-            <p>Questões Escolares</p>
-            <input type="radio" name="hora" id="Phora">
-            <p>Perdeu a Hora</p>
-            <input type="radio" name="Atraso" id="Aonibus">
-            <p>Atraso Ônibus</p>
-            <input type="radio" name="saude" id="saude">
-            <p>Saúde/Bem-Estar</p>
-        </div>
-        <div class="descrevaAtraso">
-            <label for="Descreva">Descreva aqui... <span>(opcional)</span> </label>
-            <input type="text" name="descreva" id="descreva" placeholder="Descreva aqui...">
+            <div>
+                <h1>Registro de Atraso</h1>
+                <h3>Preencha as informações abaixo para registrar o atraso.</h3>
+            </div>
+        </header>
 
-            <input type="submit" value="Salvar registro">
-        </div>
+        <form action="#" method="POST">
+            <div class="grid-container">
+                
+                <!-- Campo Estudante -->
+                <div class="input-container">
+                    <label for="iEstudante">Estudante <span>*</span></label>
+                    <div class="input-wrapper">
+                        <!-- Ícone de Estudante/Usuário -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <input type="text" name="estudante" id="iEstudante" required placeholder="Digite o nome do estudante">
+                    </div>
+                </div>
+
+                <!-- Campo Turma -->
+                <div class="input-container">
+                    <label for="turmas">Turma <span>*</span></label>
+                    <div class="input-wrapper">
+                        <!-- Ícone de Turma/Grupo -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <select name="turma" id="turmas" required>
+                            <option value="" disabled selected hidden>Selecione a turma</option>
+                            <option value="TI">AATI M1</option>
+                            <option value="PCP">AAPCP V3</option>
+                            <option value="WEG">AAWEG V1</option>
+                            <option value="MANUTENCAO">AAMNT</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Campo Professor (Agora ocupando a linha inteira abaixo) -->
+                <div class="input-container full-width">
+                    <label for="Professores">Professor <span>*</span></label>
+                    <div class="input-wrapper">
+                        <!-- Ícone de Professor/Crachá -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        <select name="Professor" id="Professores" required>
+                            <option value="" disabled selected hidden>Selecione o Professor</option>
+                            <option value="TI">Willy Manke</option>
+                            <option value="PCP">Celina</option>
+                            <option value="WEG">Gustavo</option>
+                            <option value="MANUTENCAO">Alex</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Motivo do Atraso com Ordem do Print -->
+            <div class="full-width">
+                <label>Motivo do Atraso <span>*</span></label>
+                <div class="motivos-grid">
+                    
+                    <!-- 1. Questões Escolares -->
+                    <label class="radio-card" for="escolares">
+                        <div class="radio-content">
+                            <!-- Ícone Escola/Pasta -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            <span>Questões escolares</span>
+                        </div>
+                        <input type="radio" name="motivo_atraso" id="escolares" value="escola" required>
+                    </label>
+
+                    <!-- 2. Atraso Ônibus -->
+                    <label class="radio-card" for="Aonibus">
+                        <div class="radio-content">
+                            <!-- Ícone Ônibus -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="12" rx="2"></rect><path d="M19 18h2a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-2"></path><path d="M5 18H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h2"></path><path d="M8 8h8"></path><path d="M6 12h2"></path><path d="M16 12h2"></path><line x1="9" y1="16" x2="9" y2="18"></line><line x1="15" y1="16" x2="15" y2="18"></line></svg>
+                            <span>Atraso ônibus</span>
+                        </div>
+                        <input type="radio" name="motivo_atraso" id="Aonibus" value="onibus">
+                    </label>
+
+                    <!-- 3. Perdeu a Hora -->
+                    <label class="radio-card" for="Phora">
+                        <div class="radio-content">
+                            <!-- Ícone Relógio -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Perdeu a hora</span>
+                        </div>
+                        <input type="radio" name="motivo_atraso" id="Phora" value="hora">
+                    </label>
+
+                    <!-- 4. Saúde/Bem-Estar -->
+                    <label class="radio-card" for="isaude">
+                        <div class="radio-content">
+                            <!-- Ícone Coração -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>Saúde/ bem-estar</span>
+                        </div>
+                        <input type="radio" name="motivo_atraso" id="isaude" value="saude">
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- Área de Texto com Limite Corrigido para 300 -->
+            <div class="textarea-container full-width">
+                <label for="descreva">Descreva aqui... <span class="opcional">(opcional)</span></label>
+                <div class="input-wrapper" style="align-items: flex-start;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="top: 15px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"></path></svg>
+                    <textarea name="descreva" id="descreva" placeholder="Descreva aqui..."></textarea>
+                </div>
+                <span class="char-counter">0 / 300</span>
+            </div>
+
+            <!-- Botão Submit Atualizado -->
+            <div class="submit-container full-width">
+                <button type="submit">
+                    <!-- Ícone Salvar Registro -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Salvar Registro
+                </button>
+                <p style="color: #a0aec0; font-size: 0.85rem; margin-top: 10px;">Seus dados estão seguros conosco.</p>
+            </div>
+        </form>
     </main>
+
+    <!-- Contador de Caracteres Dinâmico (Máximo 300) -->
+    <script>
+        const textarea = document.getElementById('descreva');
+        const counter = document.querySelector('.char-counter');
+        const maxLength = 300;
+
+        textarea.setAttribute('maxlength', maxLength);
+
+        textarea.addEventListener('input', () => {
+            const currentLength = textarea.value.length;
+            counter.textContent = `${currentLength} / ${maxLength}`;
+        });
+    </script>
 </body>
 
 </html>

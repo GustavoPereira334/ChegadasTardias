@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -13,20 +13,21 @@
         <div class="logon">
             <h1>Login</h1>
 
-            <form action="flogin">
-                <label for="Name">Usuário</label>
+            <!-- APENAS UM FORMULÁRIO: Configurado com o destino e o método GET -->
+            <form action="src/pages/chegadastardias.html" method="GET">
+                <label for="name">Usuário</label>
                 <input type="text" name="Tname" id="name" required>
                 <br>
                 <label for="Senha">Senha</label>
                 <input type="password" name="Psenha" id="Senha" required>
                 <p><a href="#">Esqueceu a Senha?</a></p>
 
-                <form action="src/pages/chegadastardias.html" method="POST">
-                    <input type="submit" name="entrar" id="Entrar" value="Entrar">
-                </form>
+                <!-- O botão agora pertence legitimamente ao formulário acima -->
+                <input type="submit" name="entrar" id="Entrar" value="Entrar">
 
-                <div class="img"><img src="src/utils/images/image senai.png" alt="imagem senai" width="30px"
-                        height="30px"></div>
+                <div class="img">
+                    <img src="src/utils/images/image senai.png" alt="imagem senai" width="30px" height="30px">
+                </div>
             </form>
         </div>
         <div class="image">

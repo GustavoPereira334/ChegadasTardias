@@ -19,6 +19,7 @@ body {
     display: flex;
     width: 100%;
     height: 100vh;
+    align-items: stretch;
 }
 
 /* ==========================================
@@ -79,7 +80,7 @@ body {
 /* Efeito ao clicar no input */
 .logon input[type="text"]:focus,
 .logon input[type="password"]:focus {
-    border-color: #0056b3;
+    border-color: #fa6301;
     box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
 }
 
@@ -104,7 +105,7 @@ body {
 .logon input[type="submit"] {
     width: 100%;
     padding: 12px;
-    background-color: #0056b3;
+    background-color: #fa5c01;
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -116,16 +117,11 @@ body {
 }
 
 .logon input[type="submit"]:hover {
-    background-color: #004085;
+    background-color: #fa6501d2;
 }
 
 /* Centralização do logo pequeno do Senai abaixo do formulário */
-.logon .img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-}
+
 
 /* Remove a quebra <br> padrão para não quebrar o layout flexbox */
 .logon br {
@@ -135,30 +131,49 @@ body {
 
 .image {
     flex: 1;
-    background-color: orangered; /* Cor sólida caso a imagem falhe */
-    position: relative;
     overflow: hidden;
-    background-size: cover
+    position: relative;
+    height: 100vh;
+    background-color: #fa6301;
 }
 
-/* Garante que a imagem ocupe todo o espaço lateral com corte perfeito */
 .image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center top;
     display: block;
+}
+
+.logon .img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+}
+
+.logon .img img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+
+.logon .img img:hover {
+    opacity: 1;
 }
 
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
     }
-    
+
     .image {
-        display: none; /* Oculta o lado azul em telas pequenas focando no login */
+        display: none;
+        /* Oculta o lado azul em telas pequenas focando no login */
     }
-    
+
     .logon {
         padding: 20px;
     }

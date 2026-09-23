@@ -48,16 +48,6 @@ python -m http.server 5500
 
 Depois, acesse `http://localhost:5500`.
 
-## Publicação no GitHub Pages
-
-1. Envie o projeto para um repositório do GitHub.
-2. Abra **Settings → Pages**.
-3. Em **Build and deployment**, selecione **Deploy from a branch**.
-4. Escolha a branch `main`, pasta `/ (root)` e clique em **Save**.
-5. Aguarde o endereço público ser disponibilizado e teste novamente login, cadastro, consulta, edição e exclusão.
-
-O arquivo de entrada já está na raiz com o nome `index.html`, conforme exigido pelo GitHub Pages.
-
 ## Estrutura
 
 ```text

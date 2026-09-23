@@ -2,52 +2,206 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administração</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Administração | Chegadas Tardias</title>
+
+    <link
+        rel="stylesheet"
+        href="../style/adm.css"
+    >
+
 </head>
-<link rel="stylesheet" href="../style/adm.css">
 
 <body>
-    <div class="container">
-        <h3>Registros Gerais</h3>
-        <!-- Filtros -->
-        <div class="filters-container">
-            <input type="search" placeholder="Buscar...">
+
+    <main class="dashboard">
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>Registros Gerais</h1>
+
+                <p id="welcomeMessage">
+                    Carregando...
+                </p>
+
+            </div>
+
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </header>
+
+        <section class="filters">
+
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Buscar aluno, turma ou motivo..."
+            >
+
             <select id="areaBox">
-                <option value="todasTurmas">Todas turmas</option>
+
+                <option value="todasTurmas">
+                    Todas as turmas
+                </option>
+
             </select>
-        </div>
-        <!-- Cards de Contadores -->
-        <div class="cards-container">
-            <div class="card">
-                <span class="card-value" id="totalAtrasos">0</span>
-                <span class="card-label">Total de atrasos</span>
+
+        </section>
+
+        <section class="cards">
+
+            <article class="card">
+
+                <span
+                    class="card-value"
+                    id="totalAtrasos"
+                >
+                    0
+                </span>
+
+                <span class="card-label">
+                    Total de atrasos
+                </span>
+
+            </article>
+
+            <article class="card">
+
+                <span
+                    class="card-value"
+                    id="turmasAfetadas"
+                >
+                    0
+                </span>
+
+                <span class="card-label">
+                    Turmas afetadas
+                </span>
+
+            </article>
+
+            <article class="card">
+
+                <span
+                    class="card-value"
+                    id="perdeuHora"
+                >
+                    0
+                </span>
+
+                <span class="card-label">
+                    Perdeu a hora
+                </span>
+
+            </article>
+
+        </section>
+
+        <section class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>DATA / HORA</th>
+                        <th>ALUNO</th>
+                        <th>TURMA</th>
+                        <th>PROFESSOR</th>
+                        <th>MOTIVO</th>
+                        <th>AÇÃO</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabelaCorpo"></tbody>
+
+            </table>
+
+        </section>
+
+        <p
+            id="pageMessage"
+            class="message"
+        ></p>
+
+    </main>
+
+    <div id="editModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close-modal></div>
+
+        <section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+            <div class="modal-header">
+                <div>
+                    <h2 id="editTitle">Editar registro</h2>
+                    <p>Atualize os dados da chegada tardia.</p>
+                </div>
+
+                <button type="button" class="modal-close" data-close-modal aria-label="Fechar">&times;</button>
             </div>
-            <div class="card">
-                <span class="card-value" id="turmasAfetadas">0</span>
-                <span class="card-label">Turmas afetadas</span>
-            </div>
-            <div class="card">
-                <span class="card-value" id="perdeuHora">0</span>
-                <span class="card-label">Perdeu a hora</span>
-            </div>
-        </div>
-        <table class="table-info">
-            <thead>
-                <tr>
-                    <th>HORA</th>
-                    <th>ALUNO</th>
-                    <th>TURMA</th>
-                    <th>MOTIVO</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="tabelaCorpo">
-            </tbody>
-        </table>
+
+            <form id="editForm">
+                <input type="hidden" id="editId">
+
+                <div class="edit-grid">
+                    <div class="form-group">
+                        <label for="editTurma">Turma</label>
+                        <input id="editTurma" maxlength="50" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editProfessor">Professor</label>
+                        <input id="editProfessor" maxlength="100" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="editMotivo">Motivo</label>
+                        <select id="editMotivo" required>
+                            <option value="Questões escolares">Questões escolares</option>
+                            <option value="Atraso ônibus">Atraso ônibus</option>
+                            <option value="Perdeu a hora">Perdeu a hora</option>
+                            <option value="Saúde / bem-estar">Saúde / bem-estar</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="editDescricao">Descrição</label>
+                        <textarea id="editDescricao" maxlength="300" rows="4"></textarea>
+                        <small><span id="editCharCounter">0</span>/300 caracteres</small>
+                    </div>
+                </div>
+
+                <p id="editMessage" class="message" aria-live="polite"></p>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" data-close-modal>Cancelar</button>
+                    <button type="submit" id="btnSalvarEdicao" class="primary-button">Salvar alterações</button>
+                </div>
+            </form>
+        </section>
     </div>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="../script/config.js"></script>
+    <script src="../script/administrator.js"></script>
+
 </body>
-<script src="../script/administrator.js"></script>
 
 </html>

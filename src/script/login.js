@@ -1,30 +1,123 @@
-const usuarios = [
-    { usuario: "Pedagogico", senha: "senai", role: "admin" },
-    { usuario: "Gustavo", senha: "22", role: "aluno" },
-    { usuario: "Marissa", senha: "22", role: "aluno" },
-    { usuario: "Willy", senha: "aati", role: "professor" },
-];
+const form = document.getElementById('loginForm');
+const btnEntrar = document.getElementById('btnEntrar');
+const message = document.getElementById('loginMessage');
 
-document.getElementById('loginForm').addEventListener('submit', function (event) {
-    event.preventDefault();
+function mostrarMensagem(texto, tipo = '') {
+    message.textContent = texto;
+    message.className = `message ${tipo}`;
+}
 
-    const usuarioDigitado = document.getElementById('name').value.trim();
-    const senhaDigitada = document.getElementById('Senha').value;
+async function verificarUsuarioLogado() {
 
-    const usuarioEncontrado = usuarios.find(
-        u => u.usuario === usuarioDigitado && u.senha === senhaDigitada
-    );
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
 
-    if (!usuarioEncontrado) {
-        alert("Usuário ou senha incorretos! Tente novamente.");
+    if (!session) {
         return;
     }
 
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado))
+    await redirecionarUsuario(session.user.id);
+}
 
-    if (usuarioEncontrado.role === "admin" || usuarioEncontrado.role === "professor") {
-        window.location.href = "./src/pages/administrator.html";
-    } else {
-        window.location.href = "./src/pages/chegadastardias.html";
+async function redirecionarUsuario(userId) {
+
+    const { data: perfil, error } = await supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+    if (error || !perfil) {
+        console.error(error);
+
+        mostrarMensagem(
+            'Não foi possível carregar seu perfil.',
+            'error'
+        );
+
+        return;
     }
+
+    if (
+        perfil.role === 'admin' ||
+        perfil.role === 'professor'
+    ) {
+        window.location.href = './src/pages/administrator.html';
+        return;
+    }
+
+    if (perfil.role === 'aluno') {
+        window.location.href = './src/pages/chegadastardias.html';
+    }
+}
+
+form.addEventListener('submit', async (event) => {
+
+    event.preventDefault();
+
+    const email = document
+        .getElementById('email')
+        .value
+        .trim();
+
+    const senha = document
+        .getElementById('senha')
+        .value;
+
+    if (!email || !senha) {
+        mostrarMensagem(
+            'Preencha e-mail e senha.',
+            'error'
+        );
+
+        return;
+    }
+
+    btnEntrar.disabled = true;
+    btnEntrar.textContent = 'Entrando...';
+
+    mostrarMensagem('');
+
+    let data;
+    let error;
+
+    try {
+        const resposta = await supabaseClient.auth.signInWithPassword({
+            email,
+            password: senha
+        });
+
+        data = resposta.data;
+        error = resposta.error;
+    } catch (networkError) {
+        console.error(networkError);
+        mostrarMensagem(
+            'Falha de conexão. Verifique sua internet e tente novamente.',
+            'error'
+        );
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = 'Entrar';
+        return;
+    }
+
+    if (error) {
+
+        console.error(error);
+
+        mostrarMensagem(
+            'E-mail ou senha incorretos.',
+            'error'
+        );
+
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = 'Entrar';
+
+        return;
+    }
+
+    await redirecionarUsuario(data.user.id);
+
 });
+
+verificarUsuarioLogado();

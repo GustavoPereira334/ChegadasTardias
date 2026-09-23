@@ -1,68 +1,311 @@
-const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+const tabelaCorpo = document.getElementById('tabelaCorpo');
+const searchInput = document.getElementById('searchInput');
+const areaBox = document.getElementById('areaBox');
 
-// Se não há usuário logado, manda de volta pro login
-if (!usuarioLogado) {
-    window.location.href = '../../index.html';
+const totalAtrasos = document.getElementById('totalAtrasos');
+const turmasAfetadas = document.getElementById('turmasAfetadas');
+const perdeuHora = document.getElementById('perdeuHora');
+
+const welcomeMessage = document.getElementById('welcomeMessage');
+const pageMessage = document.getElementById('pageMessage');
+const btnLogout = document.getElementById('btnLogout');
+
+let usuarioAtual = null;
+let registros = [];
+
+function mostrarMensagem(texto, tipo = '') {
+
+    pageMessage.textContent = texto;
+    pageMessage.className = `message ${tipo}`;
+
 }
 
-function carregarRegistros(filtroTurma = 'todasTurmas', termoBusca = '') {
-    const todos = JSON.parse(localStorage.getItem('registrosAtraso') || '[]');
+async function carregarUsuario() {
 
-    // Filtra apenas os registros do aluno logado
-    const meus = todos.filter(r => r.aluno === usuarioLogado.usuario);
+    const {
+        data: { user },
+        error
+    } = await supabaseClient.auth.getUser();
 
-    const filtrados = meus.filter(r => {
-        const turmaOk  = filtroTurma === 'todasTurmas' || r.turma === filtroTurma;
-        const busca    = termoBusca.toLowerCase();
-        const buscaOk  = !busca ||
-            r.motivo.toLowerCase().includes(busca) ||
-            r.turma.toLowerCase().includes(busca) ||
-            r.data?.includes(busca);
-        return turmaOk && buscaOk;
-    });
+    if (error || !user) {
 
-    // Cards
-    document.getElementById('totalAtrasos').textContent  = filtrados.length;
-    document.getElementById('turmasAfetadas').textContent = new Set(filtrados.map(r => r.turma)).size;
-    document.getElementById('perdeuHora').textContent    = filtrados.filter(r => r.perdeuHora).length;
+        window.location.href = '../../index.html';
 
-    // Tabela
-    const tbody = document.getElementById('tabelaCorpo');
-    tbody.innerHTML = '';
+        return false;
+    }
 
-    if (filtrados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum registro encontrado.</td></tr>';
+    usuarioAtual = user;
+
+    const { data: perfil, error: perfilError } = await supabaseClient
+        .from('profiles')
+        .select('nome, turma, role')
+        .eq('id', user.id)
+        .single();
+
+    if (perfilError || !perfil) {
+
+        mostrarMensagem(
+            'Não foi possível carregar seu perfil.',
+            'error'
+        );
+
+        return false;
+    }
+
+    if (perfil.role !== 'aluno') {
+
+        window.location.href = './administrator.html';
+
+        return false;
+    }
+
+    welcomeMessage.textContent =
+        `Olá, ${perfil.nome}. Seus registros de chegada tardia.`;
+
+    return true;
+}
+
+async function carregarRegistros() {
+
+    if (!usuarioAtual) {
         return;
     }
 
-    filtrados.forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${r.data} ${r.hora}</td>
-            <td>${r.aluno}</td>
-            <td>${r.turma}</td>
-            <td>${r.motivo}${r.descricao ? `<br><small style="color:#888">${r.descricao}</small>` : ''}</td>
-            <td></td>
-        `;
-        tbody.appendChild(tr);
-    });
+    const { data, error } = await supabaseClient
+        .from('atrasos')
+        .select(`
+            id,
+            turma,
+            professor,
+            motivo,
+            descricao,
+            data,
+            hora
+        `)
+        .eq('aluno_id', usuarioAtual.id)
+        .order('data', { ascending: false })
+        .order('hora', { ascending: false });
 
-    // Popula select de turmas com as turmas do aluno
-    const areaBox = document.getElementById('areaBox');
-    const turmas  = ['todasTurmas', ...new Set(meus.map(r => r.turma))];
-    areaBox.innerHTML = turmas.map(t =>
-        `<option value="${t}" ${t === filtroTurma ? 'selected' : ''}>
-            ${t === 'todasTurmas' ? 'Todas turmas' : t}
-        </option>`
-    ).join('');
+    if (error) {
+
+        console.error(error);
+
+        mostrarMensagem(
+            'Erro ao carregar seus registros.',
+            'error'
+        );
+
+        return;
+    }
+
+    registros = data || [];
+
+    preencherTurmas();
+
+    renderizarRegistros();
+
 }
 
-document.getElementById('areaBox').addEventListener('change', function() {
-    carregarRegistros(this.value, document.querySelector('input[type="search"]').value);
+function preencherTurmas() {
+
+    const turmas = [
+        ...new Set(
+            registros.map(registro => registro.turma)
+        )
+    ];
+
+    areaBox.innerHTML = `
+        <option value="todasTurmas">
+            Todas as turmas
+        </option>
+    `;
+
+    turmas.forEach(turma => {
+
+        const option = document.createElement('option');
+
+        option.value = turma;
+        option.textContent = turma;
+
+        areaBox.appendChild(option);
+
+    });
+
+}
+
+function renderizarRegistros() {
+
+    const turmaSelecionada = areaBox.value;
+    const busca = searchInput.value
+        .trim()
+        .toLowerCase();
+
+    const filtrados = registros.filter(registro => {
+
+        const turmaOk =
+            turmaSelecionada === 'todasTurmas' ||
+            registro.turma === turmaSelecionada;
+
+        const texto = [
+            registro.turma,
+            registro.professor,
+            registro.motivo,
+            registro.descricao || '',
+            registro.data
+        ]
+            .join(' ')
+            .toLowerCase();
+
+        const buscaOk =
+            !busca ||
+            texto.includes(busca);
+
+        return turmaOk && buscaOk;
+
+    });
+
+    atualizarCards(filtrados);
+    renderizarTabela(filtrados);
+
+}
+
+function atualizarCards(registrosFiltrados) {
+
+    totalAtrasos.textContent =
+        registrosFiltrados.length;
+
+    turmasAfetadas.textContent =
+        new Set(
+            registrosFiltrados.map(
+                registro => registro.turma
+            )
+        ).size;
+
+    perdeuHora.textContent =
+        registrosFiltrados.filter(
+            registro => registro.motivo === 'Perdeu a hora'
+        ).length;
+
+}
+
+function renderizarTabela(registrosFiltrados) {
+
+    tabelaCorpo.innerHTML = '';
+
+    if (registrosFiltrados.length === 0) {
+
+        tabelaCorpo.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    Nenhum registro encontrado.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    registrosFiltrados.forEach(registro => {
+
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+            <td>
+                ${formatarData(registro.data)}
+                <br>
+                <small>${formatarHora(registro.hora)}</small>
+            </td>
+
+            <td>
+                <span class="badge">
+                    ${escaparHTML(registro.turma)}
+                </span>
+            </td>
+
+            <td>
+                ${escaparHTML(registro.professor)}
+            </td>
+
+            <td>
+                <strong>
+                    ${escaparHTML(registro.motivo)}
+                </strong>
+
+                ${
+                    registro.descricao
+                        ? `
+                            <br>
+                            <small>
+                                ${escaparHTML(registro.descricao)}
+                            </small>
+                        `
+                        : ''
+                }
+            </td>
+        `;
+
+        tabelaCorpo.appendChild(tr);
+
+    });
+
+}
+
+function formatarData(data) {
+
+    if (!data) return '-';
+
+    const [ano, mes, dia] = data.split('-');
+
+    return `${dia}/${mes}/${ano}`;
+
+}
+
+function formatarHora(hora) {
+
+    if (!hora) return '-';
+
+    return hora.substring(0, 5);
+
+}
+
+function escaparHTML(texto) {
+
+    const div = document.createElement('div');
+
+    div.textContent = texto ?? '';
+
+    return div.innerHTML;
+
+}
+
+searchInput.addEventListener(
+    'input',
+    renderizarRegistros
+);
+
+areaBox.addEventListener(
+    'change',
+    renderizarRegistros
+);
+
+btnLogout.addEventListener('click', async () => {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = '../../index.html';
+
 });
 
-document.querySelector('input[type="search"]').addEventListener('input', function() {
-    carregarRegistros(document.getElementById('areaBox').value, this.value);
-});
+async function iniciar() {
 
-carregarRegistros();
+    const autorizado = await carregarUsuario();
+
+    if (!autorizado) {
+        return;
+    }
+
+    await carregarRegistros();
+
+}
+
+iniciar();

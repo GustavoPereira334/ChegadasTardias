@@ -1,180 +1,179 @@
-/* ==========================================
-   1. RESET E CONFIGURAÇÕES GERAIS
-   ========================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 body {
-    height: 100vh;
-    background-color: #ffffff;
-    overflow: hidden;
+    min-height: 100vh;
+
+    font-family:
+        'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+    background: #f7f7f7;
 }
 
-/* Container principal dividido ao meio */
-.container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    align-items: stretch;
+.login-container {
+    min-height: 100vh;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
-/* ==========================================
-   2. LADO ESQUERDO: FORMULÁRIO DE LOGON
-   ========================================== */
-.logon {
-    flex: 1;
+.login-panel {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+
     padding: 40px;
-    background-color: #ffffff;
+    background: #ffffff;
 }
 
-/* Envoltório do formulário para controlar a largura máxima */
-.logon form {
+.login-content {
     width: 100%;
-    max-width: 360px;
+    max-width: 420px;
+}
+
+.login-content h1 {
+    margin-bottom: 10px;
+
+    color: #1f2937;
+
+    font-size: 2rem;
+}
+
+.login-subtitle {
+    margin-bottom: 35px;
+
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-}
+    gap: 8px;
 
-/* Título estilizado */
-.logon h1 {
-    font-size: 1.8rem;
-    color: #333333;
-    margin-bottom: 25px;
-    font-weight: 700;
-    width: 100%;
-    max-width: 360px;
-    text-align: left;
-}
-
-/* Rótulos dos campos */
-.logon label {
-    font-size: 0.85rem;
-    color: #666666;
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-/* Campos de entrada (Usuário e Senha) */
-.logon input[type="text"],
-.logon input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    background-color: #f8f9fa;
-    font-size: 0.95rem;
-    color: #333333;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Efeito ao clicar no input */
-.logon input[type="text"]:focus,
-.logon input[type="password"]:focus {
-    border-color: #fa6301;
-    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.1);
-}
-
-/* Link de esquecer a senha */
-.logon p {
-    margin-top: 4px;
     margin-bottom: 20px;
 }
 
-.logon p a {
-    font-size: 0.8rem;
-    color: #0056b3;
-    text-decoration: none;
-    font-weight: 500;
-}
+.form-group label {
+    color: #374151;
 
-.logon p a:hover {
-    text-decoration: underline;
-}
-
-/* Botão de Enviar (Entrar) */
-.logon input[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: #fa5c01;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 0.95rem;
+
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #f97316;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(249, 115, 22, 0.12);
+}
+
+#btnEntrar {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #f97316;
+    color: white;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-bottom: 30px;
+
+    transition: 0.2s;
 }
 
-.logon input[type="submit"]:hover {
-    background-color: #fa6501d2;
+#btnEntrar:hover {
+    background: #ea580c;
 }
 
-/* Centralização do logo pequeno do Senai abaixo do formulário */
-
-
-/* Remove a quebra <br> padrão para não quebrar o layout flexbox */
-.logon br {
-    display: none;
+#btnEntrar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
+.message {
+    min-height: 22px;
 
-.image {
-    flex: 1;
+    margin-top: 15px;
+
+    font-size: 0.9rem;
+}
+
+.message.error {
+    color: #dc2626;
+}
+
+.message.success {
+    color: #16a34a;
+}
+
+.login-footer {
+    margin-top: 45px;
+
+    color: #9ca3af;
+
+    text-align: center;
+
+    font-size: 0.8rem;
+}
+
+.login-image {
     overflow: hidden;
-    position: relative;
-    height: 100vh;
-    background-color: #fa6301;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f97316;
 }
 
-.image img {
+.login-image img {
     width: 100%;
     height: 100%;
+
     object-fit: cover;
-    object-position: center top;
-    display: block;
 }
 
-.logon .img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 24px;
-}
+@media (max-width: 800px) {
 
-.logon .img img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-}
-
-.logon .img img:hover {
-    opacity: 1;
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
+    .login-container {
+        grid-template-columns: 1fr;
     }
 
-    .image {
+    .login-image {
         display: none;
-        /* Oculta o lado azul em telas pequenas focando no login */
     }
 
-    .logon {
-        padding: 20px;
+    .login-panel {
+        padding: 25px;
     }
+
 }

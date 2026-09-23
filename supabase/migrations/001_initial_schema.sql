@@ -27,8 +27,9 @@ create table if not exists public.atrasos (
         )
     ),
     descricao text check (descricao is null or char_length(descricao) <= 300),
-    data date not null default current_date,
-    hora time not null default localtime,
+    registrado_em timestamptz not null default now(),
+    data date not null default (timezone('America/Sao_Paulo', now())::date),
+    hora time not null default (timezone('America/Sao_Paulo', now())::time),
     created_at timestamptz not null default now()
 );
 

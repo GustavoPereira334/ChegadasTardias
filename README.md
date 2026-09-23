@@ -11,6 +11,9 @@ Sistema web desenvolvido para registrar e acompanhar chegadas tardias de alunos 
 - Exclusão com confirmação pelo administrador (DELETE).
 - Histórico individual do aluno.
 - Indicadores de total de atrasos, turmas afetadas e ocorrências de “Perdeu a hora”.
+- Alertas disciplinares calculados exclusivamente pelos atrasos reais de cada aluno.
+- Progressão: 3 atrasos = verbal; 4 = 1ª escrita; 5 = 2ª escrita; 6 = 3ª escrita com suspensão.
+- Registro do horário exato pelo servidor, exibido no fuso `America/Sao_Paulo`.
 - Interface responsiva para computador e celular.
 
 ## Tecnologias
@@ -25,7 +28,9 @@ Sistema web desenvolvido para registrar e acompanhar chegadas tardias de alunos 
 
 1. Crie um projeto no [Supabase](https://supabase.com/).
 2. Abra o **SQL Editor**.
-3. Execute o arquivo [`supabase/migrations/001_initial_schema.sql`](supabase/migrations/001_initial_schema.sql).
+3. Execute, nesta ordem, os arquivos:
+   - [`supabase/migrations/001_initial_schema.sql`](supabase/migrations/001_initial_schema.sql)
+   - [`supabase/migrations/002_alertas_e_horario.sql`](supabase/migrations/002_alertas_e_horario.sql)
 4. Em **Authentication → Users**, crie os usuários de teste.
 5. Preencha ou atualize os registros correspondentes na tabela `profiles`, definindo `nome`, `turma` e `role`.
 6. Em `src/script/config.js`, informe a URL do projeto e a chave pública `anon`.
@@ -47,6 +52,16 @@ python -m http.server 5500
 ```
 
 Depois, acesse `http://localhost:5500`.
+
+## Publicação no GitHub Pages
+
+1. Envie o projeto para um repositório do GitHub.
+2. Abra **Settings → Pages**.
+3. Em **Build and deployment**, selecione **Deploy from a branch**.
+4. Escolha a branch `main`, pasta `/ (root)` e clique em **Save**.
+5. Aguarde o endereço público ser disponibilizado e teste novamente login, cadastro, consulta, edição e exclusão.
+
+O arquivo de entrada já está na raiz com o nome `index.html`, conforme exigido pelo GitHub Pages.
 
 ## Estrutura
 

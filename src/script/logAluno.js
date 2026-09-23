@@ -80,11 +80,11 @@ async function carregarRegistros() {
             motivo,
             descricao,
             data,
-            hora
+            hora,
+            registrado_em
         `)
         .eq('aluno_id', usuarioAtual.id)
-        .order('data', { ascending: false })
-        .order('hora', { ascending: false });
+        .order('registrado_em', { ascending: false });
 
     if (error) {
 
@@ -211,9 +211,9 @@ function renderizarTabela(registrosFiltrados) {
 
         tr.innerHTML = `
             <td>
-                ${formatarData(registro.data)}
+                ${formatarDataHora(registro.registrado_em, registro.data, 'data')}
                 <br>
-                <small>${formatarHora(registro.hora)}</small>
+                <small>${formatarDataHora(registro.registrado_em, registro.hora, 'hora')}</small>
             </td>
 
             <td>
@@ -266,6 +266,26 @@ function formatarHora(hora) {
 
     return hora.substring(0, 5);
 
+}
+
+function formatarDataHora(registradoEm, valorAntigo, parte) {
+
+    if (!registradoEm) {
+        return parte === 'data'
+            ? formatarData(valorAntigo)
+            : formatarHora(valorAntigo);
+    }
+
+    const data = new Date(registradoEm);
+
+    if (Number.isNaN(data.getTime())) return '-';
+
+    return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        ...(parte === 'data'
+            ? { day: '2-digit', month: '2-digit', year: 'numeric' }
+            : { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    }).format(data);
 }
 
 function escaparHTML(texto) {

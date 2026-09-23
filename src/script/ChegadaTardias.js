@@ -408,7 +408,9 @@ form.addEventListener(
 
 
         mostrarMensagem(
-            'Atraso registrado com sucesso!',
+            data?.registrado_em
+                ? `Atraso registrado às ${formatarHorarioServidor(data.registrado_em)}.`
+                : 'Atraso registrado com sucesso!',
             'success'
         );
 
@@ -447,6 +449,15 @@ form.addEventListener(
 
     }
 );
+
+function formatarHorarioServidor(registradoEm) {
+    return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    }).format(new Date(registradoEm));
+}
 
 
 /* =========================================

@@ -19,10 +19,35 @@ const editDescricao = document.getElementById('editDescricao');
 const editCharCounter = document.getElementById('editCharCounter');
 const editMessage = document.getElementById('editMessage');
 const btnSalvarEdicao = document.getElementById('btnSalvarEdicao');
+const btnOpenAlerts = document.getElementById('btnOpenAlerts');
+const alertsCount = document.getElementById('alertsCount');
+const alertsModal = document.getElementById('alertsModal');
+const alertsSearch = document.getElementById('alertsSearch');
+const alertsClassFilter = document.getElementById('alertsClassFilter');
+const alertsStatusFilter = document.getElementById('alertsStatusFilter');
+const alertsTableBody = document.getElementById('alertsTableBody');
+const alertsMessage = document.getElementById('alertsMessage');
+const pendingMeasures = document.getElementById('pendingMeasures');
+const verbalMeasures = document.getElementById('verbalMeasures');
+const writtenMeasures = document.getElementById('writtenMeasures');
+const suspensionMeasures = document.getElementById('suspensionMeasures');
+const measureModal = document.getElementById('measureModal');
+const measureForm = document.getElementById('measureForm');
+const measureStudentId = document.getElementById('measureStudentId');
+const measureType = document.getElementById('measureType');
+const measureStudent = document.getElementById('measureStudent');
+const measureLabel = document.getElementById('measureLabel');
+const measureNotes = document.getElementById('measureNotes');
+const suspensionFields = document.getElementById('suspensionFields');
+const suspensionDays = document.getElementById('suspensionDays');
+const measureMessage = document.getElementById('measureMessage');
+const btnSaveMeasure = document.getElementById('btnSaveMeasure');
 
 let usuarioAtual = null;
 let perfilAtual = null;
 let registros = [];
+let medidasRegistradas = [];
+let alertasAlunos = [];
 
 function mostrarMensagem(texto, tipo = '') {
 
@@ -96,12 +121,12 @@ async function carregarRegistros() {
             descricao,
             data,
             hora,
+            registrado_em,
             profiles (
                 nome
             )
         `)
-        .order('data', { ascending: false })
-        .order('hora', { ascending: false });
+        .order('registrado_em', { ascending: false });
 
     if (error) {
 
@@ -119,6 +144,7 @@ async function carregarRegistros() {
 
     preencherTurmas();
     renderizarRegistros();
+    await carregarMedidasDisciplinares();
 
 }
 
@@ -237,10 +263,10 @@ function renderizarTabela(registrosFiltrados) {
         tr.innerHTML = `
 
             <td>
-                ${formatarData(registro.data)}
+                ${formatarDataHora(registro.registrado_em, registro.data, 'data')}
                 <br>
                 <small>
-                    ${formatarHora(registro.hora)}
+                    ${formatarDataHora(registro.registrado_em, registro.hora, 'hora')}
                 </small>
             </td>
 
@@ -365,6 +391,253 @@ async function excluirRegistro(id) {
     await carregarRegistros();
 
 }
+
+async function carregarMedidasDisciplinares() {
+
+    const { data, error } = await supabaseClient
+        .from('medidas_disciplinares')
+        .select('id, aluno_id, tipo, quantidade_atrasos, aplicada_em, observacao, dias_suspensao');
+
+    if (error) {
+        console.error(error);
+        alertsMessage.textContent =
+            'Execute a migration 002 no Supabase para habilitar as advertências.';
+        alertsMessage.className = 'message error';
+        medidasRegistradas = [];
+    } else {
+        medidasRegistradas = data || [];
+        alertsMessage.textContent = '';
+    }
+
+    calcularAlertasReais();
+}
+
+function obterMedidasDevidas(quantidade) {
+    const limites = [
+        { minimo: 3, tipo: 'verbal', label: 'Advertência verbal', classe: 'measure-verbal' },
+        { minimo: 4, tipo: 'escrita_1', label: '1ª advertência escrita', classe: 'measure-written-1' },
+        { minimo: 5, tipo: 'escrita_2', label: '2ª advertência escrita', classe: 'measure-written-2' },
+        { minimo: 6, tipo: 'escrita_3_suspensao', label: '3ª escrita + suspensão', classe: 'measure-suspension' }
+    ];
+
+    return limites.filter(item => quantidade >= item.minimo);
+}
+
+function calcularAlertasReais() {
+
+    const alunos = new Map();
+
+    registros.forEach(registro => {
+        const alunoId = String(registro.aluno_id);
+        const atual = alunos.get(alunoId) || {
+            alunoId,
+            nome: registro.profiles?.nome || 'Aluno',
+            turma: registro.turma || '-',
+            quantidade: 0
+        };
+
+        atual.quantidade += 1;
+        alunos.set(alunoId, atual);
+    });
+
+    alertasAlunos = [...alunos.values()]
+        .map(aluno => {
+            const medidasDevidas = obterMedidasDevidas(aluno.quantidade);
+            if (!medidasDevidas.length) return null;
+
+            const pendente = medidasDevidas.find(medida =>
+                !medidasRegistradas.some(item =>
+                    String(item.aluno_id) === aluno.alunoId && item.tipo === medida.tipo
+                )
+            );
+
+            const medida = pendente || medidasDevidas[medidasDevidas.length - 1];
+            const registroMedida = medidasRegistradas.find(item =>
+                String(item.aluno_id) === aluno.alunoId && item.tipo === medida.tipo
+            );
+
+            return {
+                ...aluno,
+                ...medida,
+                status: registroMedida ? 'aplicada' : 'pendente',
+                registroMedida
+            };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.quantidade - a.quantidade || a.nome.localeCompare(b.nome));
+
+    preencherFiltroTurmasAlertas();
+    atualizarResumoAlertas();
+    renderizarAlertas();
+}
+
+function preencherFiltroTurmasAlertas() {
+
+    const valorAtual = alertsClassFilter.value;
+    const turmas = [...new Set(alertasAlunos.map(item => item.turma))].sort();
+
+    alertsClassFilter.innerHTML = '<option value="todas">Todas as turmas</option>';
+
+    turmas.forEach(turma => {
+        const option = document.createElement('option');
+        option.value = turma;
+        option.textContent = turma;
+        alertsClassFilter.appendChild(option);
+    });
+
+    if (turmas.includes(valorAtual)) alertsClassFilter.value = valorAtual;
+}
+
+function atualizarResumoAlertas() {
+
+    const pendentes = alertasAlunos.filter(item => item.status === 'pendente');
+
+    alertsCount.textContent = pendentes.length;
+    pendingMeasures.textContent = pendentes.length;
+    verbalMeasures.textContent = alertasAlunos.filter(item => item.tipo === 'verbal').length;
+    writtenMeasures.textContent = alertasAlunos.filter(item =>
+        item.tipo === 'escrita_1' || item.tipo === 'escrita_2'
+    ).length;
+    suspensionMeasures.textContent = alertasAlunos.filter(item =>
+        item.tipo === 'escrita_3_suspensao'
+    ).length;
+}
+
+function renderizarAlertas() {
+
+    const busca = alertsSearch.value.trim().toLowerCase();
+    const turma = alertsClassFilter.value;
+    const status = alertsStatusFilter.value;
+
+    const filtrados = alertasAlunos.filter(item => {
+        const correspondeBusca = !busca || item.nome.toLowerCase().includes(busca);
+        const correspondeTurma = turma === 'todas' || item.turma === turma;
+        const correspondeStatus = status === 'todos' || item.status === status;
+        return correspondeBusca && correspondeTurma && correspondeStatus;
+    });
+
+    alertsTableBody.innerHTML = '';
+
+    if (!filtrados.length) {
+        alertsTableBody.innerHTML = `
+            <tr><td colspan="6" class="empty">Nenhum aluno encontrado.</td></tr>
+        `;
+        return;
+    }
+
+    filtrados.forEach(item => {
+        const tr = document.createElement('tr');
+        const podeRegistrar = perfilAtual.role === 'admin' && item.status === 'pendente';
+
+        tr.innerHTML = `
+            <td><strong>${escaparHTML(item.nome)}</strong></td>
+            <td><span class="badge">${escaparHTML(item.turma)}</span></td>
+            <td>${item.quantidade}</td>
+            <td><span class="measure-badge ${item.classe}">${item.label}</span></td>
+            <td>
+                <span class="status-badge ${item.status === 'aplicada' ? 'status-applied' : 'status-pending'}">
+                    ${item.status === 'aplicada' ? 'Aplicada' : 'Pendente'}
+                </span>
+            </td>
+            <td>
+                ${podeRegistrar ? `
+                    <button type="button" class="register-measure-button" data-student-id="${item.alunoId}">
+                        Registrar
+                    </button>
+                ` : '—'}
+            </td>
+        `;
+
+        alertsTableBody.appendChild(tr);
+    });
+}
+
+function abrirAlertas() {
+    alertsModal.hidden = false;
+    document.body.classList.add('modal-open');
+    renderizarAlertas();
+}
+
+function fecharAlertas() {
+    alertsModal.hidden = true;
+    if (measureModal.hidden && editModal.hidden) {
+        document.body.classList.remove('modal-open');
+    }
+}
+
+function abrirRegistroMedida(alunoId) {
+
+    const alerta = alertasAlunos.find(item => item.alunoId === String(alunoId));
+    if (!alerta || alerta.status === 'aplicada') return;
+
+    measureStudentId.value = alerta.alunoId;
+    measureType.value = alerta.tipo;
+    measureStudent.textContent = `${alerta.nome} • ${alerta.turma} • ${alerta.quantidade} atrasos`;
+    measureLabel.textContent = alerta.label;
+    suspensionFields.hidden = alerta.tipo !== 'escrita_3_suspensao';
+    suspensionDays.required = alerta.tipo === 'escrita_3_suspensao';
+    measureMessage.textContent = '';
+    measureModal.hidden = false;
+}
+
+function fecharRegistroMedida() {
+    measureModal.hidden = true;
+    measureForm.reset();
+    measureMessage.textContent = '';
+}
+
+btnOpenAlerts.addEventListener('click', abrirAlertas);
+alertsSearch.addEventListener('input', renderizarAlertas);
+alertsClassFilter.addEventListener('change', renderizarAlertas);
+alertsStatusFilter.addEventListener('change', renderizarAlertas);
+
+alertsModal.addEventListener('click', event => {
+    if (event.target.closest('[data-close-alerts]')) fecharAlertas();
+
+    const button = event.target.closest('.register-measure-button');
+    if (button) abrirRegistroMedida(button.dataset.studentId);
+});
+
+measureModal.addEventListener('click', event => {
+    if (event.target.closest('[data-close-measure]')) fecharRegistroMedida();
+});
+
+measureForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const alerta = alertasAlunos.find(item => item.alunoId === measureStudentId.value);
+    if (!alerta || perfilAtual.role !== 'admin') return;
+
+    btnSaveMeasure.disabled = true;
+    btnSaveMeasure.textContent = 'Registrando...';
+
+    const { error } = await supabaseClient
+        .from('medidas_disciplinares')
+        .insert({
+            aluno_id: alerta.alunoId,
+            tipo: alerta.tipo,
+            quantidade_atrasos: alerta.quantidade,
+            responsavel_id: usuarioAtual.id,
+            observacao: measureNotes.value.trim() || null,
+            dias_suspensao: alerta.tipo === 'escrita_3_suspensao'
+                ? Number(suspensionDays.value)
+                : null
+        });
+
+    if (error) {
+        console.error(error);
+        measureMessage.textContent = 'Não foi possível registrar a medida.';
+        measureMessage.className = 'message error';
+    } else {
+        fecharRegistroMedida();
+        await carregarMedidasDisciplinares();
+        alertsMessage.textContent = 'Medida registrada com sucesso.';
+        alertsMessage.className = 'message success';
+    }
+
+    btnSaveMeasure.disabled = false;
+    btnSaveMeasure.textContent = 'Confirmar aplicação';
+});
 
 function abrirModalEdicao(id) {
 
@@ -522,6 +795,26 @@ function formatarHora(hora) {
 
     return hora.substring(0, 5);
 
+}
+
+function formatarDataHora(registradoEm, valorAntigo, parte) {
+
+    if (!registradoEm) {
+        return parte === 'data'
+            ? formatarData(valorAntigo)
+            : formatarHora(valorAntigo);
+    }
+
+    const data = new Date(registradoEm);
+
+    if (Number.isNaN(data.getTime())) return '-';
+
+    return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        ...(parte === 'data'
+            ? { day: '2-digit', month: '2-digit', year: 'numeric' }
+            : { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    }).format(data);
 }
 
 function escaparHTML(texto) {

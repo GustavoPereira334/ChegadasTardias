@@ -44,6 +44,14 @@
 
         </header>
 
+        <section class="dashboard-actions">
+            <button type="button" id="btnOpenAlerts" class="alerts-button">
+                <span aria-hidden="true">⚠️</span>
+                Alertas e advertências
+                <span id="alertsCount" class="alerts-count">0</span>
+            </button>
+        </section>
+
         <section class="filters">
 
             <input
@@ -190,6 +198,103 @@
                 <div class="modal-actions">
                     <button type="button" class="secondary-button" data-close-modal>Cancelar</button>
                     <button type="submit" id="btnSalvarEdicao" class="primary-button">Salvar alterações</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div id="alertsModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close-alerts></div>
+
+        <section class="modal-content alerts-modal-content" role="dialog" aria-modal="true" aria-labelledby="alertsTitle">
+            <div class="modal-header">
+                <div>
+                    <h2 id="alertsTitle">Alertas e advertências</h2>
+                    <p>Medidas calculadas pelos registros reais de cada aluno.</p>
+                </div>
+
+                <button type="button" class="modal-close" data-close-alerts aria-label="Fechar">&times;</button>
+            </div>
+
+            <div class="alerts-summary">
+                <article><strong id="pendingMeasures">0</strong><span>Medidas pendentes</span></article>
+                <article><strong id="verbalMeasures">0</strong><span>Advertências verbais</span></article>
+                <article><strong id="writtenMeasures">0</strong><span>Advertências escritas</span></article>
+                <article class="danger-summary"><strong id="suspensionMeasures">0</strong><span>Suspensões</span></article>
+            </div>
+
+            <div class="alerts-filters">
+                <input type="search" id="alertsSearch" placeholder="Buscar aluno...">
+                <select id="alertsClassFilter">
+                    <option value="todas">Todas as turmas</option>
+                </select>
+                <select id="alertsStatusFilter">
+                    <option value="todos">Todos os status</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="aplicada">Aplicadas</option>
+                </select>
+            </div>
+
+            <div class="table-container alerts-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ALUNO</th>
+                            <th>TURMA</th>
+                            <th>ATRASOS</th>
+                            <th>MEDIDA ATUAL</th>
+                            <th>STATUS</th>
+                            <th>AÇÃO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTableBody"></tbody>
+                </table>
+            </div>
+
+            <p id="alertsMessage" class="message" aria-live="polite"></p>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" data-close-alerts>Fechar</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="measureModal" class="modal nested-modal" hidden>
+        <div class="modal-backdrop" data-close-measure></div>
+
+        <section class="modal-content measure-modal-content" role="dialog" aria-modal="true" aria-labelledby="measureTitle">
+            <div class="modal-header">
+                <div>
+                    <h2 id="measureTitle">Registrar medida</h2>
+                    <p id="measureStudent"></p>
+                </div>
+                <button type="button" class="modal-close" data-close-measure aria-label="Fechar">&times;</button>
+            </div>
+
+            <form id="measureForm">
+                <input type="hidden" id="measureStudentId">
+                <input type="hidden" id="measureType">
+
+                <div class="measure-highlight">
+                    <span>Medida indicada</span>
+                    <strong id="measureLabel"></strong>
+                </div>
+
+                <div class="form-group">
+                    <label for="measureNotes">Observação</label>
+                    <textarea id="measureNotes" maxlength="500" rows="4" placeholder="Descreva como a medida foi aplicada..."></textarea>
+                </div>
+
+                <div id="suspensionFields" class="form-group" hidden>
+                    <label for="suspensionDays">Quantidade de dias de suspensão</label>
+                    <input type="number" id="suspensionDays" min="1" max="30" value="1">
+                </div>
+
+                <p id="measureMessage" class="message" aria-live="polite"></p>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" data-close-measure>Cancelar</button>
+                    <button type="submit" id="btnSaveMeasure" class="primary-button">Confirmar aplicação</button>
                 </div>
             </form>
         </section>
